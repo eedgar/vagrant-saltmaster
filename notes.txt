@@ -1,0 +1,123 @@
+{% if 1 == salt['cmd.retcode']('test -f /path/to/A') %}
+/path/to/A:
+  file.symlink:
+    - target: /symlink/path/A
+{% endif %}
+
+# register vagrant vms.
+https://github.com/saltstack-formulas/vagrant-dev-vm-reactor
+
+
+salt 'minion' sys.doc module
+
+
+
+09:30 < XenophonF> ekle: sorry, almost done setting up a simple example for you
+09:31 < XenophonF> got a little side-tracked along the way :)
+09:31 < ekle> :)
+09:33 -|- jdesilet [~jdesilet@66.235.132.38] has joined #salt
+09:34 -|- Cottser is now known as Cottser|away
+09:35 < XenophonF> ekle: ok, so here's how i have things set up at work
+09:35 < XenophonF> https://github.com/irtnog/salt-states
+09:35 < XenophonF> (this isn't my actual state repo)
+09:36 < XenophonF> i have five branches: master, development, testing, staging,
+          and production
+09:36 -|- unni9946 [76669b12@gateway/web/freenode/ip.118.102.155.18] has joined
+          #salt
+09:36 -|- cheus [~chadheus@128.228.53.15] has joined #salt
+09:36 -|- unni9946 [76669b12@gateway/web/freenode/ip.118.102.155.18] has quit
+          [Client Quit]
+09:37 < XenophonF> the master branch started out with just README.md, then i
+          created an empty development branch as an orphan
+09:37 -|- racooper [~rcooper@unaffiliated/racooper] has joined #salt
+09:37 < XenophonF> then i branched testing from development, staging from
+          testing, and production from staging
+09:38 < rickflare> XenophonF you seem to be very knowledgable, I want to
+          understand jinja and using varibles in my states
+09:38 < rickflare> do you know of any good tutorials
+09:39 < babilen> http://jinja.pocoo.org/docs/dev/templates/
+09:39 < rickflare> ok
+09:39 < rickflare> thanks
+09:39 < XenophonF> i'll post my git repo init script
+09:39 < XenophonF> so once i had all the branches set up, i added top.sls to
+          the master branch
+09:39 < XenophonF> otherwise the master branch is empty
+09:40 < cheus> Anyone know of a generic way to set an environment variable
+          during a state execution short of using a pair of env states (to set
+          and unset)?
+09:40 -|- aphor [~aphor@2001:470:1f11:302:e43a:90ec:8beb:e594] has joined #salt
+09:40 < XenophonF> i could have put a top.sls into each of the
+          development/testing/etc. branches, but it would make merging too
+          difficult
+09:40 < XenophonF> https://github.com/irtnog/salt-states/blob/master/top.sls
+09:41 < XenophonF> ekle: instead of targeting via minion ID, i target based on
+          the values of two different pillar keys - environment and role
+
+09:42 < XenophonF> i can add sls files to the development branch and make changes
+          and whatnot
+09:42 < XenophonF> then i merge those changes into the testing branch
+09:43 < XenophonF> get CAB approval to go to production
+09:43 < XenophonF> merge from testing to staging, run my user acceptance tests
+09:43 < XenophonF> then merge again from staging to production, and go live
+09:43 -|- ja-s [~jas@cuvpnnat.clemson.edu] has joined #salt
+09:44 < XenophonF> (you can remove branches as needed - i started out with just
+          development and production branches)
+09:44 -|- AirOnSkin [~AirOnSkin@srv-clst-301-data4.zhaw.ch] has quit [Quit:
+          Leaving]
+09:44 -|- writtenoff_ [~quassel@d205-250-253-64.bchsia.telus.net] has quit
+          [Remote host closed the connection]
+09:44 -|- writtenoff [~writtenof@d205-250-253-64.bchsia.telus.net] has quit
+          [Quit: leaving]
+09:45 < XenophonF> merges between branches are clean because changes start in the
+          development branch
+09:46 < XenophonF> i'm hoping other gitfs users will chime in here to tell me how
+          i'm doing it wrong (or how i might use gitfs more effectively)
+09:46 < XenophonF> :)
+09:48 -|- edrocks [~edrocks@66.55.63.166] has joined #salt
+09:48 -|- conan_the_destro [~fridder@unaffiliated/fridder] has joined #salt
+09:49 -|- Furao [~Furao@14.192.209.198] has joined #salt
+09:50 -|- __gotcha [~Thunderbi@plone/gotcha] has joined #salt
+09:50 -|- markm_ [~markm@31.185.252.66] has quit [Ping timeout: 264 seconds]
+09:51 < timoguin> XenophonF: that's pretty much the same way I'm doing it.
+09:51 < timoguin> I have local (for Vagrant testing), dev, qa, staging, and prod
+          branches.
+09:51 < timoguin> Merge from left to right to take it through the infrastructure
+09:53 -|- _JZ_ [~jzaitz@207.101.12.66.ptr.us.xo.net] has joined #salt
+09:53 < XenophonF> https://gist.github.com/xenophonf/95357d87b6e0b5e2b0e6 -
+          that's how i initialized my salt-states repository
+
+
+
+
+
+#!/bin/tcsh
+ 
+# FIXME: C shell scripting is evil in the eyes of the LORD.
+ 
+# First create a new, uninitialized repository called irtnog/salt-stes.
+ 
+mkdir salt-states
+cd salt-states
+echo "# salt-states" > README.md
+git init
+git add README.md
+git commit -m "First commit"
+git remote add origin git@github.com:irtnog/salt-states.git
+git push -u origin master
+ 
+# http://stackoverflow.com/questions/13969050/how-to-create-a-new-empty-branch-for-a-new-project
+ 
+git checkout --orphan development
+git rm --cached -r .
+rm README.md
+mkdir -p salt/files/cloud.{maps,profiles,providers}.d
+touch salt/files/cloud.{maps,profiles,providers}.d/irtnog.conf
+git add salt
+git commit -m "Added empty salt-cloud configuration"
+git push -u origin development
+git checkout -b testing development
+git push -u origin testing
+git checkout -b staging testing
+git push -u origin staging
+git checkout -b production staging
+git push -u origin production
