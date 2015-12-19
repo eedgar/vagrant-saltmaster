@@ -9,32 +9,24 @@ Vagrant.configure(2) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.hostname = "saltmaster-dev"
 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+  end
+
   config.vm.provider "vmware_workstation" do |v, override|
-    override.vm.box = "chef/ubuntu-14.10"
+    override.vm.box = "centos-7_1"
   end
 
   config.vm.provider "vmware_fusion" do |v, override|
-    override.vm.box = "chef/ubuntu-14.10"
+    override.vm.box = "centos-7_1"
   end
 
-  config.vm.provider "docker" do |d|
-    d.vagrant_vagrantfile = "../i7-formula/Vagrantfile"
-      d.image  = "phusion/baseimage-1410-saltmaster"
-      d.cmd    = ["/sbin/my_init", "--enable-insecure-key"]
-      d.has_ssh = true
-  end
-
-  config.vm.provider "docker" do |v, override|
-    override.ssh.username = "root"
-    override.ssh.private_key_path = "key/phusion.key"
-  end
-
-  config.vm.synced_folder "pki/", "/etc/salt/pki/",
+  config.vm.synced_folder "cache/pki/", "/etc/salt/pki/",
     owner: "root",
     group: "root",
     mount_options: ["dmode=755,fmode=664"]
 
-  config.vm.synced_folder "salt_srv", "/srv",
+  config.vm.synced_folder "cache/srv", "/srv",
     owner: "root",
     group: "root",
     mount_options: ["dmode=755,fmode=664"]
@@ -45,8 +37,8 @@ Vagrant.configure(2) do |config|
 
   # Provisioners
   config.vm.provision "shell", path: "saltmaster-bootstrap.sh"
-  config.vm.provision :salt do |salt|
-      salt.run_highstate = true
-      salt.no_minion = true
-  end
+  #config.vm.provision :salt do |salt|
+  #    salt.run_highstate = true
+  #    salt.no_minion = true
+  #end
 end

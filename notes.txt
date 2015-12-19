@@ -121,3 +121,25 @@ git checkout -b staging testing
 git push -u origin staging
 git checkout -b production staging
 git push -u origin production
+
+
+
+# Ask for password on provisioning.
+
+module MySvc
+  def self.password
+    begin
+      system 'stty -echo'
+      print 'MySvc Password: '
+      ; pass = $stdin.gets.chomp; puts "\n"
+    ensure
+      system 'stty echo'
+    end
+    pass
+  end
+end
+
+# Init log file
+config.vm.provision :shell, :path => "provisioners/setup-log.sh", :privileged => true, :args => [ MySvc.password() ]
+
+# End ask for password.

@@ -1,0 +1,10 @@
+file_client: local
+file_roots:
+   base:
+     - /vagrant/salt/states
+     - /vagrant/salt/formulas/ntp-formula
+     - /vagrant/salt/formulas/salt-formula
+
+pillar_roots:
+   base:
+     - /vagrant/salt/pillars
