@@ -35,3 +35,7 @@ fi
 
 salt-call --config-dir=/vagrant/salt/config/ --log-level=quiet grains.setval role saltmaster
 salt-call --config-dir=/vagrant/salt/config/ --state-output=mixed --log-level=quiet state.highstate
+
+service salt-minion restart
+salt-call state.highstate
+

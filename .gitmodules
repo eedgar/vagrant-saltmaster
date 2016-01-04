@@ -7,3 +7,6 @@
 [submodule "salt/formulas/ntp-formula"]
 	path = salt/formulas/ntp-formula
 	url = https://github.com/eedgar/ntp-formula
+[submodule "salt/states"]
+	path = salt/states
+	url = https://github.com/eedgar/edgarlab-saltstates.git
