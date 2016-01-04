@@ -24,12 +24,12 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "cache/pki/", "/etc/salt/pki/",
     owner: "root",
     group: "root",
-    mount_options: ["dmode=755,fmode=664"]
+    mount_options: ["dmode=755","fmode=664"]
 
   config.vm.synced_folder "cache/srv", "/srv",
     owner: "root",
     group: "root",
-    mount_options: ["dmode=755,fmode=664"]
+    mount_options: ["dmode=755","fmode=664"]
 
   config.vm.network "forwarded_port", guest: 4505, host: 4505
   config.vm.network "forwarded_port", guest: 4506, host: 4506
