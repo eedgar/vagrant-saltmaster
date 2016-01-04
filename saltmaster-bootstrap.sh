@@ -6,11 +6,14 @@ if [ "${OS_TYPE}" = 'Linux' ]; then
     then
         wget -O install_salt.sh https://bootstrap.saltstack.com
         sudo sh install_salt.sh -U -M -L -S -P git v2015.8.3
+        rm install_salt.sh
     fi
 elif [ "${OS_TYPE}" = 'FreeBSD' ]; then
     if [ ! -x '/usr/local/bin/salt' ]; then
         fetch -o /tmp/salt_bootstrap.sh http://bootstrap.saltstack.com
         chmod +x /tmp/salt_bootstrap.sh
+        sudo sh install_salt.sh -U -M -L -S -P git v2015.8.3
+        rm install_salt.sh
     fi
 elif [ "${OS_TYPE}" = 'Darwin' ]; then
     # Firstly, we need brew
