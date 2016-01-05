@@ -4,6 +4,7 @@ file_roots:
      - /vagrant/salt/states
      - /vagrant/salt/formulas/ntp-formula
      - /vagrant/salt/formulas/salt-formula
+     - /vagrant/salt/formulas/users-formula
 
 pillar_roots:
    base:

@@ -36,6 +36,12 @@ fi
 salt-call --config-dir=/vagrant/salt/config/ --log-level=quiet grains.setval role saltmaster
 salt-call --config-dir=/vagrant/salt/config/ --state-output=mixed --log-level=quiet state.highstate
 
-service salt-minion restart
-salt-call state.highstate
+salt-run fileserver.clear_cache backend=git
+salt-run cache.clear_git_lock gitfs
+
+# Switching to the installed config on the server and make sure it runs properly.
+echo 'sleeping a minute to let git caches build'
+sleep 60
+salt-call --log-level=quiet grains.setval role saltmaster
+salt-call --state-output=mixed --log-level=quiet state.highstate
 

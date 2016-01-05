@@ -14,10 +14,12 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provider "vmware_workstation" do |v, override|
+    v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
     override.vm.box = "centos-7_1"
   end
 
   config.vm.provider "vmware_fusion" do |v, override|
+    v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
     override.vm.box = "centos-7_1"
   end
 

@@ -1,1 +1,2 @@
-bootstrap-id_rsa* filter=git-crypt diff=git-crypt
+salt/states/bitbucket/files/bitbucket-bootstrap-rsa filter=git-crypt diff=git-crypt
+salt/states/bitbucket/files/bitbucket-saltmaster-rsa filter=git-crypt diff=git-crypt

@@ -1,3 +1,8 @@
+# You need to unencrypt this with git-crypt before running vagrant up the first time.
+# if you need to update the bootstrap rsa keys they are in salt/states/bitbucket/files/bitbucket-bootstrap-rsa{,.pub}
+
+
+
 {% if 1 == salt['cmd.retcode']('test -f /path/to/A') %}
 /path/to/A:
   file.symlink:

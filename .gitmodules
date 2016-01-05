@@ -1,12 +1,12 @@
-[submodule "pillars"]
-	path = salt/pillars
-	url = git@bitbucket.org:eedgar/salt_pillar.git
 [submodule "salt/formulas/salt-formula"]
 	path = salt/formulas/salt-formula
 	url = https://github.com/eedgar/salt-formula
 [submodule "salt/formulas/ntp-formula"]
 	path = salt/formulas/ntp-formula
 	url = https://github.com/eedgar/ntp-formula
-[submodule "salt/states"]
-	path = salt/states
-	url = https://github.com/eedgar/edgarlab-saltstates.git
+[submodule "salt/pillars"]
+	path = salt/pillars
+	url = git@bitbucket.org:eedgar/edgarlab-saltpillar.git
+[submodule "salt/formulas/users-formula"]
+	path = salt/formulas/users-formula
+	url = https://github.com/eedgar/users-formula.git
