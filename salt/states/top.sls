@@ -6,6 +6,8 @@ base:
    - match: grain
    - ntp
    - time_init
+   - git
+   - pip
    - salt.gitfs.gitpython
    - salt.formulas
    - users

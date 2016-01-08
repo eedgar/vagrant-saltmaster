@@ -2,7 +2,9 @@ file_client: local
 file_roots:
    base:
      - /vagrant/salt/states
+     - /vagrant/salt/formulas/git-formula
      - /vagrant/salt/formulas/ntp-formula
+     - /vagrant/salt/formulas/pip-formula
      - /vagrant/salt/formulas/salt-formula
      - /vagrant/salt/formulas/users-formula
 

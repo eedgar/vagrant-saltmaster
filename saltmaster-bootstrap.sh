@@ -2,14 +2,14 @@
 
 OS_TYPE=$(uname -s)
 if [ "${OS_TYPE}" = 'Linux' ]; then
-    if [ ! -x '/usr/bin/salt-call' ];
+    if [ ! -x '/usr/bin/salt-master' ];
     then
         wget -O install_salt.sh https://bootstrap.saltstack.com
         sudo sh install_salt.sh -U -M -L -S -P git v2015.8.3
         rm install_salt.sh
     fi
 elif [ "${OS_TYPE}" = 'FreeBSD' ]; then
-    if [ ! -x '/usr/local/bin/salt' ]; then
+    if [ ! -x '/usr/local/bin/salt-master' ]; then
         fetch -o /tmp/salt_bootstrap.sh http://bootstrap.saltstack.com
         chmod +x /tmp/salt_bootstrap.sh
         sudo sh install_salt.sh -U -M -L -S -P git v2015.8.3
@@ -39,9 +39,14 @@ salt-call --config-dir=/vagrant/salt/config/ --state-output=mixed --log-level=qu
 salt-run fileserver.clear_cache backend=git
 salt-run cache.clear_git_lock gitfs
 
+
 # Switching to the installed config on the server and make sure it runs properly.
-echo 'sleeping a minute to let git caches build'
+echo 'sleeping to let git caches build'
+service salt-master restart
 sleep 60
+
+# Accept the salt key
+salt-key -a `hostname` -y
 salt-call --log-level=quiet grains.setval role saltmaster
 salt-call --state-output=mixed --log-level=quiet state.highstate
 

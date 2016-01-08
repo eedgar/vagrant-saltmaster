@@ -15,12 +15,12 @@ Vagrant.configure(2) do |config|
 
   config.vm.provider "vmware_workstation" do |v, override|
     v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
-    override.vm.box = "centos-7_1"
+    override.vm.box = "rocketman110us/centos71"
   end
 
   config.vm.provider "vmware_fusion" do |v, override|
     v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
-    override.vm.box = "centos-7_1"
+    override.vm.box = "rocketman110us/centos71"
   end
 
   config.vm.synced_folder "cache/pki/", "/etc/salt/pki/",

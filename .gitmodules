@@ -10,3 +10,9 @@
 [submodule "salt/formulas/users-formula"]
 	path = salt/formulas/users-formula
 	url = https://github.com/eedgar/users-formula.git
+[submodule "salt/formulas/pip-formula"]
+	path = salt/formulas/pip-formula
+	url = https://github.com/eedgar/pip-formula.git
+[submodule "salt/formulas/git-formula"]
+	path = salt/formulas/git-formula
+	url = https://github.com/eedgar/git-formula.git
