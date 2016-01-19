@@ -1,29 +1,31 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+branch = `git rev-parse --abbrev-ref HEAD`
+
 boxes = [
     {
-        :name => "server1",
+        :name => "ipa1.lab.edgar.loc",
         :eth1 => "192.168.242.10",
         :mem => "1024",
         :cpu => "1",
-        :role => "webserver",
+        :role => "ipa_server",
         :box => "rocketman110us/centos71-saltminion"
     },
     {
-        :name => "server2",
+        :name => "ipa2.lab.edgar.loc",
         :eth1 => "192.168.242.11",
         :mem => "1024",
         :cpu => "2",
-        :role => "dbserver",
+        :role => "ipa_server",
         :box => "rocketman110us/centos71-saltminion"
     },
     {
-        :name => "server3",
+        :name => "ipac.lab.edgar.loc",
         :eth1 => "192.168.242.12",
         :mem => "1024",
         :cpu => "2",
-        :role => "mailserver",
+        :role => "ipa_client",
         :box => "rocketman110us/centos71-saltminion"
     }
 ]
@@ -34,7 +36,7 @@ Vagrant.configure(2) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.hostname = "saltmaster-dev"
+  config.vm.hostname = "saltmaster-dev.lab.edgar.loc"
   config.vm.box = "rocketman110us/centos71"
 
   if Vagrant.has_plugin?("vagrant-cachier")
@@ -55,7 +57,7 @@ Vagrant.configure(2) do |config|
     saltmaster_config.vm.network "forwarded_port", guest: 4505, host: 4505
     saltmaster_config.vm.network "forwarded_port", guest: 4506, host: 4506
     saltmaster_config.vm.network "forwarded_port", guest: 8000, host: 8000
-    
+
     saltmaster_config.vm.synced_folder "cache/pki/", "/etc/salt/pki/",
         owner: "root",
         group: "root",
@@ -69,15 +71,15 @@ Vagrant.configure(2) do |config|
      saltmaster_config.vm.network "private_network", ip: "192.168.242.3"
 
      # Provisioners
-     saltmaster_config.vm.provision "shell", path: "saltmaster-bootstrap.sh"
+     saltmaster_config.vm.provision "shell", path: "saltmaster-bootstrap.sh", args: "%s" % [branch]
   end
 
-  # Clients 
+  # Clients
   boxes.each do |opts|
     config.vm.define opts[:name] do |config|
       config.vm.box = opts[:box]
       config.vm.hostname = opts[:name]
-      
+
       # Turn off shared folders
       config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
 
@@ -95,7 +97,7 @@ Vagrant.configure(2) do |config|
         mount_options: ["dmode=755","fmode=664"]
 
       # Provisioners
-      config.vm.provision "shell", path: "saltminion-bootstrap.sh", args: "%s %s" % [ opts[:name], opts[:role] ]
+      config.vm.provision "shell", path: "saltminion-bootstrap.sh", args: "%s %s %s" % [ opts[:name], opts[:role], branch]
    end
   end
 end

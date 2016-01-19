@@ -47,6 +47,8 @@ sleep 60
 
 # Accept the salt key
 salt-key -a `hostname` -y
+echo "Setting saltmaster to be in the $1 environment"
+salt-call --log-level=quiet grains.setval environment $1
 salt-call --log-level=quiet grains.setval role saltmaster
 salt-call --state-output=mixed --log-level=quiet state.highstate
 
