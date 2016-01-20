@@ -10,6 +10,7 @@ base:
    - pip
    - salt.gitfs.gitpython
    - salt.formulas
+   - salt.pillars
    - users
    - github
    - bitbucket
